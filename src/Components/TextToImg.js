@@ -8,7 +8,7 @@ import TextToImgExamples from './TextToImgExamples';
 
 function TextToImg() {
   // const apiUrl = "http://localhost:7126/api/";
-  const apiUrl = "https://ttttibackend20221228185518.azurewebsites.net";
+  const apiUrl = "https://ttttibackend20221228185518.azurewebsites.net/";
   
   const [textValue, setTextValue] = useState("");
   const [isFormLoading, setIsFormLoading] = useState(false);
