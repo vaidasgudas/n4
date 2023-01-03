@@ -48,7 +48,7 @@ function TextToImg() {
     };
     fetch(url, requestOptions)
       .then(response => {
-        if (response.status == 429) alert("Klaida. Perdaug užklausų iš jūsų IP adreso");
+        if (response.status === 429) alert("Klaida. Perdaug užklausų iš jūsų IP adreso");
         if (!response.ok) throw new Error(response.status);
         return response.json();
       })
@@ -69,7 +69,7 @@ function TextToImg() {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        if(data.QueueLength != undefined){
+        if(data.QueueLength !== undefined){
           setQueueLength(data.QueueLength);
           checkEntryStatusAfter5Seconds(queueEntryId);          
         }
