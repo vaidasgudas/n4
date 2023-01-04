@@ -3,8 +3,10 @@ import Form from 'react-bootstrap/Form';
 import Spinner from 'react-bootstrap/Spinner';
 import Badge from 'react-bootstrap/Badge';
 import Container from 'react-bootstrap/Container';
+import Accordion from 'react-bootstrap/Accordion';
 import { useEffect, useState } from 'react';
 import TextToImgExamples from './TextToImgExamples';
+import { formatDate } from '../Utils';
 
 function TextToImg() {
   // const apiUrl = "http://localhost:7126/api/";
@@ -14,7 +16,7 @@ function TextToImg() {
   const [isFormLoading, setIsFormLoading] = useState(false);
   const [isWaitingInQueue, setIsWaitingInQueue] = useState(false);
   const [queueLength, setQueueLength] = useState(0);
-  const [images, setImages] = useState([]);
+  const [imagesHistory, setImagesHistory] = useState([]);
 
   const embedRecaptcha = () => {
     const script = document.createElement("script")
@@ -69,28 +71,46 @@ function TextToImg() {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        if(data.QueueLength !== undefined){
+        if(data.QueueLength !== undefined) {
           setQueueLength(data.QueueLength);
           checkEntryStatusAfter5Seconds(queueEntryId);          
-        }
-        else if(data.Images) {
+        } else if(data.Images) {
           setIsWaitingInQueue(false);
           setIsFormLoading(false);
-          setImages(data.Images);
+
+          const historyEntry = { 
+            prompt: textValue,
+            images: data.Images,
+            generatedAt: formatDate(new Date()),
+          };
+
+          imagesHistory.unshift(historyEntry);
+          setImagesHistory(imagesHistory);
+          localStorage.setItem('generatedImages', JSON.stringify(imagesHistory));
         }
       });
   }
 
   useEffect(() => {
     embedRecaptcha();
+    try {
+      const generatedImagesHistory = JSON.parse(localStorage.getItem('generatedImages'));
+      if(generatedImagesHistory && generatedImagesHistory.length > 0) {
+        setImagesHistory(generatedImagesHistory);
+      }      
+    }
+    catch (e) { }
   }, []);
 
   return <>
     <div className="text-center mt-3 mb-5">
       <h1>Dirbtiniu intelektu generuojami vaizdai</h1>
-    </div>    
-    <TextToImgExamples />
+    </div>
+
+    { imagesHistory.length === 0 && <TextToImgExamples /> }
+
     <Container className="p-3 mt-3">
+
       <Form onSubmit={onSubmitWithCaptchaHandler}>
         <Form.Label>Išbandyti: </Form.Label>
         <Form.Control size="lg" type="text" name="text" placeholder="Tekstas" value={textValue} onChange={(e) => setTextValue(e.target.value)} disabled={isFormLoading} required maxLength="255" />
@@ -106,12 +126,21 @@ function TextToImg() {
       </Form>
 
       { isFormLoading && <div className="text-center mt-4">
-        <Spinner animation="border" size="sm" /> Generuojama. Viena užklausa generuojama apie 30 sekundžių. {isWaitingInQueue && queueLength > 0 && <><br/> Prieš jus eilėje: <Badge bg="info">{queueLength}</Badge></> }
+        <Spinner animation="border" size="sm" /> Viena užklausa generuojama apie 30 sekundžių. {isWaitingInQueue && queueLength > 0 && <><br/> Prieš jus eilėje: <Badge bg="info">{queueLength}</Badge></> }
       </div> }
 
     </Container>
 
-    { images.length > 0 && <div className="mt-4 text-center">{images.map(image => { return <><img src={image} alt="generatedAiImage" className="rounded img-fluid m-2" /> </>; })}</div> }
+    { imagesHistory.length > 0 &&
+      <Accordion defaultActiveKey={[0]} alwaysOpen className='mx-auto mt-3' style={{'maxWidth': '1630px'}}>
+        {imagesHistory.map((item, index) => { 
+          return <Accordion.Item eventKey={index} key={index}>
+            <Accordion.Header>{item.prompt}{' '}<span className="text-muted ms-3">{item.generatedAt}</span></Accordion.Header>
+            <Accordion.Body className='text-center'>
+              {item.images.map((imageUrl, urlIndex) => { return <img src={imageUrl} key={urlIndex} alt={item.prompt} className="rounded img-fluid m-2" />; })}
+            </Accordion.Body>
+          </Accordion.Item>; })}
+      </Accordion> }
 
     <Container className="p-3 mt-5">
       <small className="text-muted">

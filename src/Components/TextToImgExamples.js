@@ -11,7 +11,7 @@ function TextToImgExamples(){
                 <Card.Img variant="top" src="images/promptExample1.png" />
                 <Card.Body>
                     <Card.Text>
-                        Astronautas joja žirgu marse
+                        Astronautas joja žirgu Marse
                     </Card.Text>
                 </Card.Body>
             </Card>
