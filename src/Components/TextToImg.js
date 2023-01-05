@@ -126,7 +126,7 @@ function TextToImg() {
       </Form>
 
       { isFormLoading && <div className="text-center mt-4">
-        <Spinner animation="border" size="sm" /> Viena užklausa generuojama apie 30 sekundžių. {isWaitingInQueue && queueLength > 0 && <><br/> Prieš jus eilėje: <Badge bg="info">{queueLength}</Badge></> }
+        <Spinner animation="border" size="sm" /> Viena užklausa užtrunka apie 45 sekundes. {isWaitingInQueue && queueLength > 0 && <><br/> Prieš jus eilėje: <Badge bg="info">{queueLength}</Badge></> }
       </div> }
 
     </Container>

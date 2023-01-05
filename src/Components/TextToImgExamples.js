@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col';
 
 function TextToImgExamples(){
   return <Container>
+      <h4>Pavyzdžiai:</h4> 
       <Row >
         <Col className="mt-1">
             <Card style={{ width: '18rem' }} className="mx-auto">
@@ -47,7 +48,7 @@ function TextToImgExamples(){
             </Card>
         </Col>
       </Row>
-</Container>
+    </Container>
 }
 
 export default TextToImgExamples;
