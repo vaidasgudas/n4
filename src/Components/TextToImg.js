@@ -112,9 +112,9 @@ function TextToImg() {
     <Container className="p-3 mt-3">
 
       <Form onSubmit={onSubmitWithCaptchaHandler}>
-        <Form.Label>Išbandyti: </Form.Label>
-        <Form.Control size="lg" type="text" name="text" placeholder="Tekstas" value={textValue} onChange={(e) => setTextValue(e.target.value)} disabled={isFormLoading} required maxLength="255" />
-        <Button variant="primary" type="submit" className="mt-1" disabled={isFormLoading}>
+        { imagesHistory.length === 0 && <h2>Sugeneruok savo:</h2> }
+        <Form.Control size="lg" type="text" name="text" placeholder="Vaizdo aprašymas" value={textValue} onChange={(e) => setTextValue(e.target.value)} disabled={isFormLoading} required maxLength="255" />
+        <Button variant="primary" type="submit" className="mt-2" disabled={isFormLoading}>
           {isFormLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
           {isFormLoading ? " Generuojama..." : "Generuoti"}
         </Button>

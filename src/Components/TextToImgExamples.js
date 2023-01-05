@@ -5,11 +5,11 @@ import Col from 'react-bootstrap/Col';
 
 function TextToImgExamples(){
   return <Container>
-      <h4>Pavyzdžiai:</h4> 
+      <h2>Pavyzdžiai:</h2> 
       <Row >
         <Col className="mt-1">
             <Card style={{ width: '18rem' }} className="mx-auto">
-                <Card.Img variant="top" src="images/promptExample1.png" />
+                <Card.Img variant="top" src="images/promptExample1.png" alt="Astronautas joja žirgu Marse" />
                 <Card.Body>
                     <Card.Text>
                         Astronautas joja žirgu Marse
@@ -19,7 +19,7 @@ function TextToImgExamples(){
         </Col>
         <Col className="mt-1">
             <Card style={{ width: '18rem' }} className="mx-auto">
-                <Card.Img variant="top" src="images/promptExample2.png" />
+                <Card.Img variant="top" src="images/promptExample2.png" alt="Braškiniai sušiai" />
                 <Card.Body>
                     <Card.Text>
                         Braškiniai sušiai
@@ -29,7 +29,7 @@ function TextToImgExamples(){
         </Col>
         <Col className="mt-1">
             <Card style={{ width: '18rem' }} className="mx-auto">
-                <Card.Img variant="top" src="images/promptExample3.png" />
+                <Card.Img variant="top" src="images/promptExample3.png" alt="Panda važiuoja su motociklu"/>
                 <Card.Body>
                     <Card.Text>
                         Panda važiuoja su motociklu
@@ -39,7 +39,7 @@ function TextToImgExamples(){
         </Col>
         <Col className="mt-1">
             <Card style={{ width: '18rem' }} className="mx-auto">
-                <Card.Img variant="top" src="images/promptExample4.png" />
+                <Card.Img variant="top" src="images/promptExample4.png" alt="Tapytas paveikslas su gražia pilimi prie krioklio" />
                 <Card.Body>
                     <Card.Text>
                         Tapytas paveikslas su gražia pilimi prie krioklio
