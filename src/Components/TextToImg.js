@@ -113,7 +113,7 @@ function TextToImg() {
 
       <Form onSubmit={onSubmitWithCaptchaHandler}>
         { imagesHistory.length === 0 && <h2>Sugeneruok savo:</h2> }
-        <Form.Control size="lg" type="text" name="text" placeholder="Vaizdo aprašymas" value={textValue} onChange={(e) => setTextValue(e.target.value)} disabled={isFormLoading} required maxLength="255" />
+        <Form.Control size="lg" type="text" name="text" placeholder="Vaizdo aprašymas. Naudokit lietuviškas raides (ąčęėįšųū)" value={textValue} onChange={(e) => setTextValue(e.target.value)} disabled={isFormLoading} required maxLength="255" />
         <Button variant="primary" type="submit" className="mt-2" disabled={isFormLoading}>
           {isFormLoading && <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />}
           {isFormLoading ? " Generuojama..." : "Generuoti"}
@@ -126,7 +126,7 @@ function TextToImg() {
       </Form>
 
       { isFormLoading && <div className="text-center mt-4">
-        <Spinner animation="border" size="sm" /> Viena užklausa užtrunka apie 45 sekundes. {isWaitingInQueue && queueLength > 0 && <><br/> Prieš jus eilėje: <Badge bg="info">{queueLength}</Badge></> }
+        <Spinner animation="border" size="sm" /> Viena užklausa užtrunka apie 45 sekundes. {isWaitingInQueue && queueLength > 0 && <><br/> Prieš jus eilėje <Badge bg="info">{queueLength}</Badge> užklaus(a)(ų)(os)</> }
       </div> }
 
     </Container>
