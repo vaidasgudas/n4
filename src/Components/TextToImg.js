@@ -18,6 +18,8 @@ function TextToImg() {
   const [queueLength, setQueueLength] = useState(0);
   const [imagesHistory, setImagesHistory] = useState([]);
 
+  let timer = null;
+
   const embedRecaptcha = () => {
     const script = document.createElement("script")
     script.src = "https://www.google.com/recaptcha/api.js?render=6Lf9BsIjAAAAADpUtpkiVlqGFdTP1bLzZOieNub_"
@@ -58,23 +60,29 @@ function TextToImg() {
         setIsWaitingInQueue(true);
         setQueueLength(data.QueueLength);
         checkEntryStatusAfter5Seconds(data.QueueEntryId);
+        localStorage.setItem('generatingEntryId', data.QueueEntryId);
+        localStorage.setItem('generatingPrompt', textValue);
       });
   };
 
   const checkEntryStatusAfter5Seconds = (queueEntryId) => {
-    setTimeout(() => { checkEntryStatus(queueEntryId); }, 5000);
+    clearTimeout(timer);
+    timer = setTimeout(() => { checkEntryStatus(queueEntryId); }, 5000);
   }
 
   const checkEntryStatus = (queueEntryId) => {
     if(!queueEntryId) throw new Error(`No entryId: ${queueEntryId}`);
     const url = apiUrl + "GetQueueEntryDetails/" + queueEntryId;
+    checkEntryStatusAfter5Seconds(queueEntryId);
     fetch(url)
       .then(response => response.json())
       .then(data => {
         if(data.QueueLength !== undefined) {
           setQueueLength(data.QueueLength);
-          checkEntryStatusAfter5Seconds(queueEntryId);          
         } else if(data.Images) {
+          clearTimeout(timer);
+          localStorage.removeItem("generatingEntryId");
+          localStorage.removeItem("generatingPrompt");
           setIsWaitingInQueue(false);
           setIsFormLoading(false);
 
@@ -97,9 +105,24 @@ function TextToImg() {
       const generatedImagesHistory = JSON.parse(localStorage.getItem('generatedImages'));
       if(generatedImagesHistory && generatedImagesHistory.length > 0) {
         setImagesHistory(generatedImagesHistory);
-      }      
+      }
+
+      const generatingId = localStorage.getItem('generatingEntryId');
+      const prompt = localStorage.getItem('generatingPrompt');
+      if(generatingId && prompt) {
+        setIsWaitingInQueue(true);
+        setIsFormLoading(true);
+        setTextValue(prompt);
+        checkEntryStatus(generatingId);
+      }
     }
     catch (e) { }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
 
   return <>
