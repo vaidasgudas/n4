@@ -113,7 +113,7 @@ function TextToImg() {
         setIsWaitingInQueue(true);
         setIsFormLoading(true);
         setTextValue(prompt);
-        setTimeout(() => { checkEntryStatus(generatingId); }, 500); // Workaround
+        setTimeout(() => { checkEntryStatus(generatingId); }, 1000); // Workaround
       }
     }
     catch (e) { }
