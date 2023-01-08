@@ -117,13 +117,13 @@ function TextToImg() {
       }
     }
     catch (e) { }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     return () => {
       clearTimeout(timer);
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <>
     <div className="text-center mt-3 mb-5">
