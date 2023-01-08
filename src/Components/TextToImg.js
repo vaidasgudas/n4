@@ -12,11 +12,30 @@ function TextToImg() {
   // const apiUrl = "http://localhost:7126/api/";
   const apiUrl = "https://ttttibackend20221228185518.azurewebsites.net/api/";
   
-  const [textValue, setTextValue] = useState("");
-  const [isFormLoading, setIsFormLoading] = useState(false);
-  const [isWaitingInQueue, setIsWaitingInQueue] = useState(false);
+  let promptDefault = "";
+  let isFormLoadingDefault = false;
+  let isWaitingInQueueDefault = false;
+  let generatedImagesHistoryDefault = [];
+
+  const generatedImagesHistoryParsed = JSON.parse(localStorage.getItem('generatedImages'));
+  if(generatedImagesHistoryParsed && generatedImagesHistoryParsed.length > 0) {
+    generatedImagesHistoryDefault = generatedImagesHistoryParsed;
+  }
+
+  const generatingId = localStorage.getItem('generatingEntryId');
+  const localPrompt = localStorage.getItem('generatingPrompt');
+
+  if(generatingId && localPrompt) {
+    isFormLoadingDefault = true;
+    isWaitingInQueueDefault = true;
+    promptDefault = localPrompt;
+  }
+
+  const [textValue, setTextValue] = useState(promptDefault);
+  const [isFormLoading, setIsFormLoading] = useState(isFormLoadingDefault);
+  const [isWaitingInQueue, setIsWaitingInQueue] = useState(isWaitingInQueueDefault);
   const [queueLength, setQueueLength] = useState(0);
-  const [imagesHistory, setImagesHistory] = useState([]);
+  const [imagesHistory, setImagesHistory] = useState(generatedImagesHistoryDefault);
 
   let timer = null;
 
@@ -86,37 +105,25 @@ function TextToImg() {
           setIsWaitingInQueue(false);
           setIsFormLoading(false);
 
-          const historyEntry = { 
+          const historyEntry = {
             prompt: textValue,
             images: data.Images,
             generatedAt: formatDate(new Date()),
           };
 
-          imagesHistory.unshift(historyEntry);
-          setImagesHistory(imagesHistory);
-          localStorage.setItem('generatedImages', JSON.stringify(imagesHistory));
+          if(imagesHistory.indexOf(historyEntry) === -1){
+            imagesHistory.unshift(historyEntry);
+            setImagesHistory(imagesHistory);
+            localStorage.setItem('generatedImages', JSON.stringify(imagesHistory));        
+          }
         }
       });
   }
 
   useEffect(() => {
     embedRecaptcha();
-    try {
-      const generatedImagesHistory = JSON.parse(localStorage.getItem('generatedImages'));
-      if(generatedImagesHistory && generatedImagesHistory.length > 0) {
-        setImagesHistory(generatedImagesHistory);
-      }
-
-      const generatingId = localStorage.getItem('generatingEntryId');
-      const prompt = localStorage.getItem('generatingPrompt');
-      if(generatingId && prompt) {
-        setIsWaitingInQueue(true);
-        setIsFormLoading(true);
-        setTextValue(prompt);
-        setTimeout(() => { checkEntryStatus(generatingId); }, 3000); // Workaround
-      }
-    }
-    catch (e) { }
+    const generatingId = localStorage.getItem('generatingEntryId');
+    if(generatingId) setTimeout(() => { checkEntryStatus(generatingId); }, 1500); // Workaround
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
