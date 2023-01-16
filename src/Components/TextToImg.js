@@ -135,6 +135,7 @@ function TextToImg() {
   return <>
     <div className="text-center mt-3 mb-5">
       <h1>Dirbtiniu intelektu generuojami vaizdai</h1>
+      <h2 style={{color:'red'}}>Projektas uždarytas ir nebeveikia!</h2>
     </div>
 
     { imagesHistory.length === 0 && <TextToImgExamples /> }
